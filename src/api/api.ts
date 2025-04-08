@@ -1,22 +1,22 @@
 import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
-  baseURL: API_URL
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
-// Add request interceptor to include auth token
+// Add request interceptor
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers['x-auth-token'] = token;
   }
   return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+}, (error) => Promise.reject(error));
 
 export const authApi = {
   login: (email: string, password: string) => api.post('/auth/login', { email, password }),

@@ -13,11 +13,14 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    
     try {
       await register(name, email, password);
+      navigate('/transactions');
     } catch (err) {
-      setError('Failed to register. Please try again.');
-      console.error(err);
+      setError('Registration failed. Please try again.');
+      console.error('Registration error:', err);
     }
   };
 
